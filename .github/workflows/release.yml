@@ -7,8 +7,19 @@ permissions:
   contents: write
 
 jobs:
+  verify-branch:
+    name: Verify that runs on the main branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if branch is not main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "The release workflow should only be triggered on the main branch"
+          exit 1
+
   get-version:
     name: Get version from Cargo.toml
+    needs: verify-branch
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -61,9 +72,6 @@ jobs:
 
           - target: aarch64-apple-darwin
             os: macos-latest
-
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
 
     steps:
       - uses: actions/checkout@v4
