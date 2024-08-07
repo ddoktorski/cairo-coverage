@@ -19,6 +19,7 @@ jobs:
 
   get-version:
     name: Get version from Cargo.toml
+    needs: verify-branch
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
