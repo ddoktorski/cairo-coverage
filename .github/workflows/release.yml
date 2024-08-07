@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Fail if branch is not main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "The release workflow should only be triggered on the main branch"
+          exit 1
+
       - name: Get version from Cargo.toml
         id: lookupVersion
         uses: mikefarah/yq@f15500b20a1c991c8729870ba60a4dc3524b6a94
@@ -61,9 +67,6 @@ jobs:
 
           - target: aarch64-apple-darwin
             os: macos-latest
-
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
 
     steps:
       - uses: actions/checkout@v4
